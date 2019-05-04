@@ -69,6 +69,7 @@ def identity_block(input_tensor, kernel_size, filters, stage, block):
                     kernel_regularizer=regularizers.l2(L2_WEIGHT_DECAY),
                     name=conv_name_base + '2a')(input_tensor)
   x = layers.BatchNormalization(axis=bn_axis,
+                                scale=False,
                                 momentum=BATCH_NORM_DECAY,
                                 epsilon=BATCH_NORM_EPSILON,
                                 name=bn_name_base + '2a')(x)
@@ -80,6 +81,7 @@ def identity_block(input_tensor, kernel_size, filters, stage, block):
                     kernel_regularizer=regularizers.l2(L2_WEIGHT_DECAY),
                     name=conv_name_base + '2b')(x)
   x = layers.BatchNormalization(axis=bn_axis,
+                                scale=False,
                                 momentum=BATCH_NORM_DECAY,
                                 epsilon=BATCH_NORM_EPSILON,
                                 name=bn_name_base + '2b')(x)
@@ -90,6 +92,7 @@ def identity_block(input_tensor, kernel_size, filters, stage, block):
                     kernel_regularizer=regularizers.l2(L2_WEIGHT_DECAY),
                     name=conv_name_base + '2c')(x)
   x = layers.BatchNormalization(axis=bn_axis,
+                                scale=False,
                                 momentum=BATCH_NORM_DECAY,
                                 epsilon=BATCH_NORM_EPSILON,
                                 name=bn_name_base + '2c')(x)
@@ -136,6 +139,7 @@ def conv_block(input_tensor,
                     kernel_regularizer=regularizers.l2(L2_WEIGHT_DECAY),
                     name=conv_name_base + '2a')(input_tensor)
   x = layers.BatchNormalization(axis=bn_axis,
+                                scale=False,
                                 momentum=BATCH_NORM_DECAY,
                                 epsilon=BATCH_NORM_EPSILON,
                                 name=bn_name_base + '2a')(x)
@@ -146,6 +150,7 @@ def conv_block(input_tensor,
                     kernel_regularizer=regularizers.l2(L2_WEIGHT_DECAY),
                     name=conv_name_base + '2b')(x)
   x = layers.BatchNormalization(axis=bn_axis,
+                                scale=False,
                                 momentum=BATCH_NORM_DECAY,
                                 epsilon=BATCH_NORM_EPSILON,
                                 name=bn_name_base + '2b')(x)
@@ -156,6 +161,7 @@ def conv_block(input_tensor,
                     kernel_regularizer=regularizers.l2(L2_WEIGHT_DECAY),
                     name=conv_name_base + '2c')(x)
   x = layers.BatchNormalization(axis=bn_axis,
+                                scale=False,
                                 momentum=BATCH_NORM_DECAY,
                                 epsilon=BATCH_NORM_EPSILON,
                                 name=bn_name_base + '2c')(x)
@@ -165,6 +171,7 @@ def conv_block(input_tensor,
                            kernel_regularizer=regularizers.l2(L2_WEIGHT_DECAY),
                            name=conv_name_base + '1')(input_tensor)
   shortcut = layers.BatchNormalization(axis=bn_axis,
+                                       scale=False,
                                        momentum=BATCH_NORM_DECAY,
                                        epsilon=BATCH_NORM_EPSILON,
                                        name=bn_name_base + '1')(shortcut)
@@ -174,7 +181,7 @@ def conv_block(input_tensor,
   return x
 
 
-def resnet50(num_classes, dtype='float32'):
+def resnet50(num_classes, dtype='float32', batch_size=None):
   # TODO(tfboyd): add training argument, just lik resnet56.
   """Instantiates the ResNet50 architecture.
 
@@ -185,7 +192,8 @@ def resnet50(num_classes, dtype='float32'):
       A Keras model instance.
   """
   input_shape = (224, 224, 3)
-  img_input = layers.Input(shape=input_shape, dtype=dtype)
+  img_input = layers.Input(shape=input_shape, dtype=dtype,
+                           batch_size=batch_size)
 
   if backend.image_data_format() == 'channels_first':
     x = layers.Lambda(lambda x: backend.permute_dimensions(x, (0, 3, 1, 2)),
@@ -203,6 +211,7 @@ def resnet50(num_classes, dtype='float32'):
                     kernel_regularizer=regularizers.l2(L2_WEIGHT_DECAY),
                     name='conv1')(x)
   x = layers.BatchNormalization(axis=bn_axis,
+                                scale=False,
                                 momentum=BATCH_NORM_DECAY,
                                 epsilon=BATCH_NORM_EPSILON,
                                 name='bn_conv1')(x)
