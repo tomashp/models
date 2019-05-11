@@ -35,7 +35,7 @@ NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 10000
 
 def _get_images_labels(batch_size, split, distords=False):
   """Returns Dataset for given split."""
-  dataset = tfds.load(name='cifar10', split=split)
+  dataset = tfds.load(name='svhn_cropped', split=split)
   scope = 'data_augmentation' if distords else 'input'
   with tf.name_scope(scope):
     dataset = dataset.map(DataPreprocessor(distords), num_parallel_calls=10)
